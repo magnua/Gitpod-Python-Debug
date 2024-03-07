@@ -20,5 +20,3 @@ RUN cd /tmp && \
 # Cleanup
 RUN sudo apt-get clean && \
     sudo rm -rf /var/lib/apt/lists/*
-# RUN sudo rm /etc/profile.d/PanMSInit.sh
-# RUN sudo rm /etc/init.d/gpd 
