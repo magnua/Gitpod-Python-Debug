@@ -1,18 +1,24 @@
-FROM ubuntu:latest
-
-# Install:
-# - git (and git-lfs), for git operations (to e.g. push your work).
-#   Also required for setting up your configured dotfiles in the workspace.
-# - sudo, while not required, is recommended to be installed, since the
-#   workspace user (`gitpod`) is non-root and won't be able to install
-#   and use `sudo` to install any other tools in a live workspace.
-RUN apt-get update && apt-get install -yq \
-    git \
-    git-lfs \
-    sudo \
-    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/*
-
-# Create the gitpod user. UID must be 33333.
-RUN useradd -l -u 33333 -G sudo -md /home/gitpod -s /bin/bash -p gitpod gitpod
+FROM gitpod/workspace-full:latest
 
 USER gitpod
+
+# Copy GlobalProtect App for Linux from your repository
+# COPY PanGPLinux-6.1.3-c3.tgz /tmp/
+COPY GlobalProtect_deb-6.1.3.0-703.deb /tmp/
+
+# Install dependencies
+RUN sudo apt-get update && \
+    sudo apt-get install -y curl && \
+    sudo apt-get clean && \
+    sudo rm -rf /var/lib/apt/lists/*
+
+# Extract and install GlobalProtect App for Linux
+RUN cd /tmp && \
+#    sudo tar -xvf PanGPLinux-6.1.3-c3.tgz && \
+    sudo dpkg -i GlobalProtect_deb-6.1.3.0-703.deb
+
+# Cleanup
+RUN sudo apt-get clean && \
+    sudo rm -rf /var/lib/apt/lists/*
+# RUN sudo rm /etc/profile.d/PanMSInit.sh
+# RUN sudo rm /etc/init.d/gpd 
